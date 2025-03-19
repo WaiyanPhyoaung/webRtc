@@ -1,36 +1,33 @@
 let stream: MediaStream;
+let shareStream: MediaStream;
 let recorder: MediaRecorder;
 let recorded: Blob[] = [];
 
-const allow = document.getElementById("allow") as HTMLButtonElement;
-const shareScreen = document.getElementById("my-screen") as HTMLVideoElement;
-const showScreen = document.getElementById("show") as HTMLVideoElement;
-const stopShow = document.getElementById("stop-show") as HTMLButtonElement;
-const constraintWidth = document.getElementById("width") as HTMLInputElement;
-const constraintHeight = document.getElementById("height") as HTMLInputElement;
-const startRecording = document.getElementById(
-  "start-record"
-) as HTMLButtonElement;
-const stopRecording = document.getElementById(
-  "stop-record"
-) as HTMLButtonElement;
-const playRecording = document.getElementById(
-  "play-record"
-) as HTMLButtonElement;
-
-const changeScreenSizes = document.getElementById(
-  "change-screen-sizes"
-) as HTMLButtonElement;
-const recordScreen = document.querySelector(
-  "#record-screen"
-) as HTMLVideoElement;
+const allow = <HTMLButtonElement>document.getElementById("allow");
+const myScreen = <HTMLVideoElement>document.getElementById("my-screen");
+const showScreen = <HTMLVideoElement>document.getElementById("show");
+const stopShow = <HTMLButtonElement>document.getElementById("stop-show");
+const constraintWidth = <HTMLInputElement>document.getElementById("width");
+const constraintHeight = <HTMLInputElement>document.getElementById("height");
+const startRecording = <HTMLButtonElement>(
+  document.getElementById("start-record")
+);
+const stopRecording = <HTMLButtonElement>document.getElementById("stop-record");
+const playRecording = <HTMLButtonElement>document.getElementById("play-record");
+const changeScreenSizes = <HTMLButtonElement>(
+  document.getElementById("change-screen-sizes")
+);
+const recordScreen = <HTMLVideoElement>document.querySelector("#record-screen");
+const shareScreen = <HTMLButtonElement>document.getElementById("share-screen");
+const videoSrcSelect = <HTMLSelectElement>document.getElementById("video-src");
+const audioSrcSelect = <HTMLSelectElement>document.getElementById("audio-src");
 
 allow.addEventListener("click", (_) => {
   getMediaDevices();
 });
 
 showScreen.addEventListener("click", (_) => {
-  shareScreen.srcObject = stream;
+  myScreen.srcObject = stream;
 });
 
 stopShow.addEventListener("click", (_) => {
@@ -53,7 +50,7 @@ changeScreenSizes.addEventListener("click", (_) => {
 startRecording.addEventListener("click", (_) => {
   console.log("start recording");
   recorded = [];
-  recorder = new MediaRecorder(stream);
+  recorder = new MediaRecorder(stream); // can use shareStream or stream
   recorder.ondataavailable = (e) => {
     console.log("data available", e.data);
     recorded.push(e.data);
@@ -74,6 +71,20 @@ playRecording.addEventListener("click", (_) => {
   recordScreen.controls = true;
 });
 
+shareScreen.addEventListener("click", async (_) => {
+  console.log("share screen");
+  const options = {
+    video: true,
+    audio: false,
+    surfaceSwithing: "include",
+  };
+  try {
+    shareStream = await navigator.mediaDevices.getDisplayMedia(options);
+  } catch (error) {
+    console.log("error", error);
+  }
+});
+
 async function getMediaDevices() {
   const constraints = {
     audio: true,
@@ -81,7 +92,24 @@ async function getMediaDevices() {
   };
   try {
     stream = await navigator.mediaDevices.getUserMedia(constraints);
+    const devices = await navigator.mediaDevices.enumerateDevices();
     console.log("user media", stream);
+    console.log("devices", devices);
+
+    devices.forEach((device) => {
+      if (device.kind === "audioinput") {
+        const option = document.createElement("option");
+        option.value = device.deviceId;
+        option.textContent = device.label;
+        audioSrcSelect.appendChild(option);
+      }
+      if (device.kind === "videoinput") {
+        const option = document.createElement("option");
+        option.value = device.deviceId;
+        option.textContent = device.label;
+        videoSrcSelect.appendChild(option);
+      }
+    });
   } catch (error) {
     console.log("error", error);
     alert("User has denied the access!");
