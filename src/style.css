@@ -1,0 +1,112 @@
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+#app {
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+#app > div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+}
+
+button {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #3367d6;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+input[type="number"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0 5px;
+  width: 80px;
+}
+
+video {
+  width: 100%;
+  max-width: 640px;
+  border-radius: 8px;
+  background-color: #000;
+  margin-top: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#change-screen-sizes {
+  margin-right: 5px;
+}
+
+/* Different button colors for different actions */
+#allow {
+  background-color: #34a853;
+}
+
+#allow:hover {
+  background-color: #2e8b57;
+}
+
+#stop-show,
+#stop-record {
+  background-color: #ea4335;
+}
+
+#stop-show:hover,
+#stop-record:hover {
+  background-color: #d32f2f;
+}
+
+#start-record {
+  background-color: #fbbc05;
+  color: #333;
+}
+
+#start-record:hover {
+  background-color: #f9a825;
+}
+
+#share-screen {
+  background-color: #9c27b0;
+}
+
+#share-screen:hover {
+  background-color: #7b1fa2;
+}
+
+/* Controls container for better organization */
+.controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
